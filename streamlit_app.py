@@ -265,23 +265,31 @@ with tabs[1]:
         st.markdown("### 🌍 Monthly Number of Reviews by Language")
 
         lang_monthly = (
-                df_filtered.groupby(['month', 'originalLanguage'], observed=True)
-                .size()
-                .reset_index(name="Number of Reviews")
+        df_filtered.groupby(['month', 'originalLanguage'], observed=True)
+        .size()
+        .reset_index(name="Number of Reviews")
+        )
+
+        fig_lang = px.line(
+        lang_monthly, x="month", y="Number of Reviews", color="originalLanguage",
+        title="Monthly Reviews by Language",
+        labels={"month": "Month", "Number of Reviews": "Number of Reviews"}
         )
 
         fig_lang.update_layout(
         title_x=0.05,
         legend=dict(
-        x=1.05,
-        y=1,
-        traceorder="normal",
-        font=dict(size=10),
-        bgcolor="White",
-        bordercolor="Black",
-        borderwidth=0
-    )
-)
+            x=1.05,
+            y=1,
+            traceorder="normal",
+            font=dict(size=10),
+            bgcolor="White",
+            bordercolor="Black",
+            borderwidth=0
+        )
+        )    
+
+st.plotly_chart(fig_lang, use_container_width=True)
 
 
 with tabs[2]:
