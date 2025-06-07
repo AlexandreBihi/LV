@@ -270,24 +270,18 @@ with tabs[1]:
         .reset_index(name="Number of Reviews")
         )
 
-        fig_lang = px.line(
-        lang_monthly, x="month", y="Number of Reviews", color="originalLanguage",
-        title="Monthly Reviews by Language",
-        labels={"month": "Month", "Number of Reviews": "Number of Reviews"}
-        )
-
         fig_lang.update_layout(
         title_x=0.05,
         legend=dict(
-            x=1.05,
-            y=1,
-            traceorder="normal",
-            font=dict(size=10),
-            bgcolor="White",
-            bordercolor="Black",
-            borderwidth=0
-        )
-        )    
+        orientation="v",
+        x=0.01,  # à l'intérieur du graphe
+        y=0.99,
+        xanchor='left',
+        yanchor='top',
+        bgcolor='rgba(255,255,255,0.7)',  # semi-transparent
+        bordercolor='black',
+        borderwidth=1)
+        )   
 
 st.plotly_chart(fig_lang, use_container_width=True)
 
