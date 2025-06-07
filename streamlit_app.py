@@ -221,7 +221,6 @@ with tabs[1]:
     if df_filtered['parsedDate'].notna().sum() == 0:
         st.warning("No valid dates found in the data.")
     else:
-        df_filtered['date_day'] = df_filtered['parsedDate'].dt.date
         df_filtered['month'] = df_filtered['parsedDate'].dt.to_period("M").astype(str)
 
         st.markdown("### 🎯 Filter Curves")
@@ -230,31 +229,31 @@ with tabs[1]:
             variable_cat = st.selectbox("Categorization variable:", options=[None, 'stars', 'originalLanguage', 'isLocalGuide'])
 
         st.markdown("---")
-        st.markdown("### 📊 Number of Reviews Over Time")
+        st.markdown("### 📊 Number of Reviews Over Time (Monthly)")
 
         if variable_cat and variable_cat in df_filtered.columns:
             df_grouped = (
-                df_filtered.groupby(['date_day', variable_cat], observed=True)
+                df_filtered.groupby(['month', variable_cat], observed=True)
                 .size()
                 .reset_index(name="Number of Reviews")
             )
             fig_line_cat = px.line(
-                df_grouped, x='date_day', y="Number of Reviews", color=variable_cat,
-                title="Daily Evolution of Reviews by Category",
-                labels={'date_day': 'Date', 'Number of Reviews': "Number of Reviews"}
+                df_grouped, x='month', y="Number of Reviews", color=variable_cat,
+                title="Monthly Evolution of Reviews by Category",
+                labels={'month': 'Month', 'Number of Reviews': "Number of Reviews"}
             )
             fig_line_cat.update_layout(legend_title_text=variable_cat, title_x=0.05)
             st.plotly_chart(fig_line_cat, use_container_width=True)
         else:
             df_grouped = (
-                df_filtered.groupby('date_day', observed=True)
+                df_filtered.groupby('month', observed=True)
                 .size()
                 .reset_index(name="Number of Reviews")
             )
             fig_line = px.line(
-                df_grouped, x='date_day', y="Number of Reviews",
-                title="Daily Evolution of Reviews",
-                labels={'date_day': 'Date'}
+                df_grouped, x='month', y="Number of Reviews",
+                title="Monthly Evolution of Reviews",
+                labels={'month': 'Month'}
             )
             fig_line.update_layout(title_x=0.05)
             st.plotly_chart(fig_line, use_container_width=True)
@@ -268,6 +267,7 @@ with tabs[1]:
         )
         fig_moy.update_layout(title_x=0.05)
         st.plotly_chart(fig_moy, use_container_width=True)
+
 
 with tabs[2]:
     st.header("💬 Review Quality")
