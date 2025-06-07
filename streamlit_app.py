@@ -7,7 +7,7 @@ from collections import Counter
 import string
 import ast
 import nltk
-from gensim.parsing.preprocessing import remove_stopwords
+from nltk.corpus import stopwords
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 import numpy as np
@@ -47,6 +47,12 @@ def parse_dict_safe(x):
         return ast.literal_eval(x) if isinstance(x, str) and x.strip() != '' else {}
     except:
         return {}
+    
+nltk.download('stopwords')
+stopwords_en = set(stopwords.words('english'))
+
+def remove_stopwords(text):
+    return ' '.join([w for w in text.split() if w.lower() not in stopwords_en])
 
 # --- Initial cleaning ---
 df["statut_commentaire"] = np.where(df["textTranslated"].notna(), "Commented", "No comment")
