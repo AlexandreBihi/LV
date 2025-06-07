@@ -47,7 +47,7 @@ def parse_dict_safe(x):
         return ast.literal_eval(x) if isinstance(x, str) and x.strip() != '' else {}
     except:
         return {}
-    
+
 nltk.download('stopwords')
 stopwords_en = set(stopwords.words('english'))
 
@@ -72,39 +72,53 @@ st.sidebar.markdown("""
 <hr style='margin-top: 0.5em; margin-bottom: 1em;'>
 """, unsafe_allow_html=True)
 
+# Date range filter
 st.sidebar.markdown("### 🗓️ Analysis Period")
-min_date = df['parsedDate'].min()
-max_date = df['parsedDate'].max()
-start_date = st.sidebar.date_input("Start date:", value=min_date, min_value=min_date, max_value=max_date)
-end_date = st.sidebar.date_input("End date:", value=max_date, min_value=min_date, max_value=max_date)
+min_date = df['parsedDate'].min().date()
+max_date = df['parsedDate'].max().date()
+date_range = st.sidebar.slider(
+    "Select date range",
+    min_value=min_date,
+    max_value=max_date,
+    value=(min_date, max_date),
+    format="YYYY-MM-DD"
+)
 
+# Rating range filter
 st.sidebar.markdown("---")
-
 st.sidebar.markdown("### ⭐ Rating filter")
-min_note = st.sidebar.slider("Minimum rating", min_value=1, max_value=5, value=1)
-max_note = st.sidebar.slider("Maximum rating", min_value=1, max_value=5, value=5)
+rating_range = st.sidebar.slider(
+    "Select rating range",
+    min_value=1,
+    max_value=5,
+    value=(1, 5)
+)
 
+# Language filter
 st.sidebar.markdown("---")
-
 st.sidebar.markdown("### 🌄️ Review languages")
 langues_disponibles = sorted(df['originalLanguage'].dropna().unique())
 langues_choisies = st.sidebar.multiselect(
     "Selected language(s)", options=langues_disponibles, default=[]
 )
 
+# Place name filter
 st.sidebar.markdown("---")
-
 st.sidebar.markdown("### 🏢 Place name")
 noms_disponibles = sorted(df['title'].dropna().unique())
 nom_choisi = st.sidebar.selectbox("Filter by place name", options=["All"] + noms_disponibles)
 
 st.sidebar.caption(":bulb: Combine multiple filters to reveal hidden insights.")
 
-# Filters
+# --- Apply filters ---
 df_filtered = df.copy()
-df_filtered = df_filtered[(df_filtered['parsedDate'] >= pd.to_datetime(start_date)) &
-                          (df_filtered['parsedDate'] <= pd.to_datetime(end_date))]
-df_filtered = df_filtered[df_filtered['note_estimee'].fillna(0).between(min_note, max_note)]
+df_filtered = df_filtered[
+    (df_filtered['parsedDate'].dt.date >= date_range[0]) &
+    (df_filtered['parsedDate'].dt.date <= date_range[1])
+]
+df_filtered = df_filtered[
+    df_filtered['note_estimee'].fillna(0).between(rating_range[0], rating_range[1])
+]
 if langues_choisies:
     df_filtered = df_filtered[df_filtered['originalLanguage'].isin(langues_choisies)]
 if nom_choisi != "All":
@@ -112,6 +126,7 @@ if nom_choisi != "All":
 
 # Tabs
 tabs = st.tabs(["\U0001F4CA Summary", "\U0001F4C8 Trends", "\U0001F4AC Review Quality", "\U0001F30E Language & Profiles", "\U0001F4DD Explore"])
+
 
 with tabs[0]:
     st.markdown("## 📊 Key Metrics")
