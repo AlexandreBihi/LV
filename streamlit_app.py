@@ -208,6 +208,23 @@ with tabs[0]:
         st_data = st_folium(m, width=900, height=600)
     else:
         st.warning("Aucune coordonnée disponible pour afficher la carte.")
+
+    st.markdown("### 🌍 Monthly Number of Reviews by Language")
+
+    lang_monthly = (
+            df_filtered.groupby(['month', 'originalLanguage'], observed=True)
+            .size()
+            .reset_index(name="Number of Reviews")
+    )
+
+    fig_lang = px.line(
+            lang_monthly, x="month", y="Number of Reviews", color="originalLanguage",
+            title="Monthly Reviews by Language",
+            labels={"month": "Month", "Number of Reviews": "Number of Reviews"}
+    )
+    fig_lang.update_layout(title_x=0.05, legend_title_text="Language")
+    st.plotly_chart(fig_lang, use_container_width=True)
+
     
     
 
