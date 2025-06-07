@@ -286,7 +286,7 @@ with tabs[1]:
         yanchor='top',
         bgcolor='rgba(255,255,255,0.6)',
         bordercolor='black',
-        borderwidth=))
+        borderwidth=1))
 
         st.plotly_chart(fig_lang, use_container_width=True)
 
