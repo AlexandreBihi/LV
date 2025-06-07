@@ -265,17 +265,15 @@ with tabs[1]:
         st.markdown("### 🌍 Monthly Number of Reviews by Language")
 
         lang_monthly = (
-            df_filtered.groupby(['month', 'originalLanguage'], observed=True)
-            .size()
-            .reset_index(name="Number of Reviews")
+                df_filtered.groupby(['month', 'originalLanguage'], observed=True)
+                .size()
+                .reset_index(name="Number of Reviews")
         )
-        # Ajout d'une colonne datetime pour l'axe X
-        lang_monthly["month_dt"] = pd.to_datetime(lang_monthly["month"])
 
         fig_lang = px.line(
-            lang_monthly, x="month_dt", y="Number of Reviews", color="originalLanguage",
+            lang_monthly, x="month", y="Number of Reviews", color="originalLanguage",
             title="Monthly Reviews by Language",
-            labels={"month_dt": "Month", "Number of Reviews": "Number of Reviews"}
+            labels={"month": "Month", "Number of Reviews": "Number of Reviews"}
         )
         fig_lang.update_layout(title_x=0.05, legend_title_text="Language")
         st.plotly_chart(fig_lang, use_container_width=True)
