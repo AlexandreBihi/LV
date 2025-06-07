@@ -209,21 +209,7 @@ with tabs[0]:
     else:
         st.warning("Aucune coordonnée disponible pour afficher la carte.")
 
-    st.markdown("### 🌍 Monthly Number of Reviews by Language")
 
-    lang_monthly = (
-            df_filtered.groupby(['month', 'originalLanguage'], observed=True)
-            .size()
-            .reset_index(name="Number of Reviews")
-    )
-
-    fig_lang = px.line(
-            lang_monthly, x="month", y="Number of Reviews", color="originalLanguage",
-            title="Monthly Reviews by Language",
-            labels={"month": "Month", "Number of Reviews": "Number of Reviews"}
-    )
-    fig_lang.update_layout(title_x=0.05, legend_title_text="Language")
-    st.plotly_chart(fig_lang, use_container_width=True)
 
     
     
@@ -282,6 +268,22 @@ with tabs[1]:
         )
         fig_moy.update_layout(title_x=0.05)
         st.plotly_chart(fig_moy, use_container_width=True)
+
+        st.markdown("### 🌍 Monthly Number of Reviews by Language")
+
+        lang_monthly = (
+                df_filtered.groupby(['month', 'originalLanguage'], observed=True)
+                .size()
+                .reset_index(name="Number of Reviews")
+        )
+
+        fig_lang = px.line(
+            lang_monthly, x="month", y="Number of Reviews", color="originalLanguage",
+            title="Monthly Reviews by Language",
+            labels={"month": "Month", "Number of Reviews": "Number of Reviews"}
+        )
+        fig_lang.update_layout(title_x=0.05, legend_title_text="Language")
+        st.plotly_chart(fig_lang, use_container_width=True)
 
 
 with tabs[2]:
