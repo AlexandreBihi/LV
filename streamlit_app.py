@@ -108,8 +108,6 @@ st.sidebar.markdown("### 🏢 Place name")
 noms_disponibles = sorted(df['title'].dropna().unique())
 nom_choisi = st.sidebar.selectbox("Filter by place name", options=["All"] + noms_disponibles)
 
-st.sidebar.caption(":bulb: Combine multiple filters to reveal hidden insights.")
-
 # --- Apply filters ---
 df_filtered = df.copy()
 df_filtered = df_filtered[
