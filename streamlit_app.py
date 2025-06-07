@@ -15,7 +15,7 @@ import numpy as np
 st.set_page_config(page_title="Google Maps Reviews Dashboard", layout="wide")
 
 # --- Load data ---
-df = pd.read_parquet("data_lv.parquet")
+df = pd.read_parquet("data_lv2.parquet")
 
 # --- Utility functions ---
 def parse_relative_date(text):
