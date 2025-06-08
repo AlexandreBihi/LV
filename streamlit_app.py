@@ -294,6 +294,7 @@ with tabs[1]:
 with tabs[2]:
     st.header("💬 Review Quality")
 
+    # Histogramme 1 — distribution des notes estimées
     fig_note = px.histogram(
         df_filtered,
         x='note_estimee',
@@ -304,11 +305,20 @@ with tabs[2]:
     )
     fig_note.update_layout(
         xaxis=dict(tickmode='linear', tick0=1, dtick=1, title="Google Rating (stars)"),
-        yaxis_title="Number of Reviews"
+        yaxis_title="Number of Reviews",
+        bargap=0.2  # <-- espace entre les barres
     )
     st.plotly_chart(fig_note, use_container_width=True)
 
-    fig_mots = px.histogram(df_filtered, x='nb_mots', nbins=30, title="Review Length (in words)")
+    # Histogramme 2 — longueur des avis avec couleur selon note
+    fig_mots = px.histogram(
+        df_filtered,
+        x='nb_mots',
+        color='note_estimee',
+        nbins=30,
+        title="Review Length (in words)"
+    )
+    fig_mots.update_layout(bargap=0.2)  # <-- espace entre les barres ici aussi
     st.plotly_chart(fig_mots, use_container_width=True)
 
     st.markdown(f"**% of very short reviews (<10 words)**: {100 * (df_filtered['nb_mots'] < 10).mean():.1f}%")
@@ -348,6 +358,7 @@ with tabs[2]:
         ax.imshow(wc_neg, interpolation='bilinear')
         ax.axis("off")
         st.pyplot(fig)
+
         
 with tabs[3]:
     st.header("🌍 Languages & Profiles")
