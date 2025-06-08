@@ -322,7 +322,7 @@ with tabs[2]:
     st.plotly_chart(fig_mots, use_container_width=True)
 
     mots_moyens_par_note_statut = (
-        df_filtered.groupby(["note_estimee", "statut_commentaire"], observed=True)["nb_mots"]
+        df_filtered.groupby(["note_estimee", "isLocalGuide"], observed=True)["nb_mots"]
         .mean()
         .reset_index(name="Longueur Moyenne")
     )
@@ -331,7 +331,7 @@ with tabs[2]:
         mots_moyens_par_note_statut,
         x="note_estimee",
         y="Longueur Moyenne",
-        color="statut_commentaire",
+        color="isLocalGuide",
         barmode="group",
         text="Longueur Moyenne",
         title="Average Review Length by Estimated Rating and Comment Status"
