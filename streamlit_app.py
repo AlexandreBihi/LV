@@ -306,7 +306,7 @@ with tabs[2]:
     fig_note.update_layout(
         xaxis=dict(tickmode='linear', tick0=1, dtick=1, title="Google Rating (stars)"),
         yaxis_title="Number of Reviews",
-        bargap=0.2  # <-- espace entre les barres
+        bargap=0.2
     )
     st.plotly_chart(fig_note, use_container_width=True)
 
@@ -318,9 +318,33 @@ with tabs[2]:
         nbins=30,
         title="Review Length (in words)"
     )
-    fig_mots.update_layout(bargap=0.2)  # <-- espace entre les barres ici aussi
+    fig_mots.update_layout(bargap=0.2)
     st.plotly_chart(fig_mots, use_container_width=True)
 
+    # Barplot — nombre moyen de mots par note
+    mots_moyens_par_note = (
+        df_filtered.groupby("note_estimee", observed=True)["nb_mots"]
+        .mean()
+        .reset_index(name="Longueur Moyenne")
+    )
+
+    fig_mots_moyens = px.bar(
+        mots_moyens_par_note,
+        x="note_estimee",
+        y="Longueur Moyenne",
+        text="Longueur Moyenne",
+        title="Average Review Length by Estimated Rating"
+    )
+    fig_mots_moyens.update_traces(texttemplate='%{text:.1f}', textposition='outside')
+    fig_mots_moyens.update_layout(
+        xaxis_title="Estimated Rating",
+        yaxis_title="Average Number of Words",
+        yaxis=dict(tickformat="d"),
+        bargap=0.2
+    )
+    st.plotly_chart(fig_mots_moyens, use_container_width=True)
+
+    # Statistiques textuelles
     st.markdown(f"**% of very short reviews (<10 words)**: {100 * (df_filtered['nb_mots'] < 10).mean():.1f}%")
     st.markdown(f"**% of very long reviews (>100 words)**: {100 * (df_filtered['nb_mots'] > 100).mean():.1f}%")
 
@@ -358,7 +382,7 @@ with tabs[2]:
         ax.imshow(wc_neg, interpolation='bilinear')
         ax.axis("off")
         st.pyplot(fig)
-
+        
         
 with tabs[3]:
     st.header("🌍 Languages & Profiles")
