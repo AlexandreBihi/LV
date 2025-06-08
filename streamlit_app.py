@@ -321,21 +321,22 @@ with tabs[2]:
     fig_mots.update_layout(bargap=0.2)
     st.plotly_chart(fig_mots, use_container_width=True)
 
-    # Barplot — nombre moyen de mots par note
-    mots_moyens_par_note = (
-        df_filtered.groupby("note_estimee", observed=True)["nb_mots"]
+    mots_moyens_par_note_statut = (
+        df_filtered.groupby(["note_estimee", "statut_commentaire"], observed=True)["nb_mots"]
         .mean()
         .reset_index(name="Longueur Moyenne")
     )
 
     fig_mots_moyens = px.bar(
-        mots_moyens_par_note,
+        mots_moyens_par_note_statut,
         x="note_estimee",
         y="Longueur Moyenne",
+        color="statut_commentaire",
+        barmode="group",
         text="Longueur Moyenne",
-        title="Average Review Length by Estimated Rating",
-        color='statut_commentaire'
+        title="Average Review Length by Estimated Rating and Comment Status"
     )
+    
     fig_mots_moyens.update_traces(texttemplate='%{text:.1f}', textposition='outside')
     fig_mots_moyens.update_layout(
         xaxis_title="Estimated Rating",
