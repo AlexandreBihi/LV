@@ -389,11 +389,15 @@ with tabs[2]:
 with tabs[3]:
     st.header("🌍 Languages & Profiles")
 
-    fig_lang = px.pie(df_filtered, names='originalLanguage', title="Language Distribution")
-    st.plotly_chart(fig_lang, use_container_width=True)
+    col1, col2 = st.columns(2)
 
-    fig_guide = px.pie(df_filtered, names='isLocalGuide', title="Proportion of Local Guides")
-    st.plotly_chart(fig_guide, use_container_width=True)
+    with col1:
+        fig_lang = px.pie(df_filtered, names='originalLanguage', title="Language Distribution")
+        st.plotly_chart(fig_lang, use_container_width=True)
+
+    with col2:
+        fig_guide = px.pie(df_filtered, names='isLocalGuide', title="Proportion of Local Guides")
+        st.plotly_chart(fig_guide, use_container_width=True)
 
     df_filtered['stars_arrondi'] = df_filtered['stars'].round(0).astype("Int64")
 
