@@ -353,7 +353,7 @@ with tabs[2]:
     st.markdown("---")
     st.markdown("### ☁️ WordCloud by Review Tone")
 
-    mots_exclus = {"none", "louis", "vuitton", "store", "Paris", "came", "come"}
+    mots_exclus = {"none", "louis", "vuitton", "store", "Paris", "came", "come", " store"}
 
     text_pos = ' '.join(
         word for line in df_filtered[df_filtered['stars'] >= 4]['cleaned_words_all'].dropna()
