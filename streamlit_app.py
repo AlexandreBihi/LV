@@ -445,26 +445,30 @@ with tabs[3]:
 with tabs[4]:
     st.header("📝 Explore Reviews")
 
-    # Filtres de langue dans les colonnes
-    col1, col2 = st.columns(2)
-    with col1:
-        langue_sel = st.selectbox(
-            "Filter by Language",
-            options=["All"] + sorted(df['originalLanguage'].dropna().unique().tolist())
-        )
-    with col2:
-        min_mots = st.slider("Minimum Review Length (in words)", min_value=0, max_value=500, value=20)
-
-    # Input de recherche — en dehors des colonnes pour être sûr qu’il s’affiche
-    mot_cle = st.text_input(
-        "Search for a word in comments (case-insensitive)", 
-        value="", 
-        key="mot_cle_explore"
+    # Sélecteur langue et minimum mots
+    langue_sel = st.selectbox(
+        "Filter by Language",
+        options=["All"] + sorted(df['originalLanguage'].dropna().unique().tolist()),
+        key="langue_sel_explore"
     )
 
-    # Filtrage
+    min_mots = st.slider(
+        "Minimum Review Length (in words)", 
+        min_value=0, max_value=500, 
+        value=20,
+        key="min_mots_explore"
+    )
+
+    # Champ de recherche — HORS colonnes
+    mot_cle = st.text_input(
+        "Search for a word in comments (case-insensitive)",
+        key="mot_cle_input_explore"
+    )
+
+    # Copie DataFrame
     df_exploration = df_filtered.copy()
 
+    # Filtres
     if langue_sel != "All":
         df_exploration = df_exploration[df_exploration['originalLanguage'] == langue_sel]
 
@@ -481,4 +485,5 @@ with tabs[4]:
         st.markdown(f"⭐ {row['note_estimee']} | 🕒 {row['publishAt']}")
         st.markdown(f"💬 {row['text']}")
         st.markdown("---")
+
 
