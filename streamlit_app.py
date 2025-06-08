@@ -443,16 +443,33 @@ with tabs[3]:
 
 with tabs[4]:
     st.header("📝 Explore Reviews")
-    langue_sel = st.selectbox("Filter by Language", options=["All"] + sorted(df['originalLanguage'].dropna().unique().tolist()))
+
+    col1, col2 = st.columns(2)
+    with col1:
+        langue_sel = st.selectbox(
+            "Filter by Language",
+            options=["All"] + sorted(df['originalLanguage'].dropna().unique().tolist())
+        )
+    with col2:
+        mot_cle = st.text_input("Search for a word in comments (case-insensitive)", value="")
+
     min_mots = st.slider("Minimum Review Length (in words)", min_value=0, max_value=500, value=20)
 
     df_exploration = df_filtered.copy()
+
     if langue_sel != "All":
         df_exploration = df_exploration[df_exploration['originalLanguage'] == langue_sel]
+
     df_exploration = df_exploration[df_exploration['nb_mots'] >= min_mots]
+
+    if mot_cle:
+        df_exploration = df_exploration[df_exploration['text'].str.contains(mot_cle, case=False, na=False)]
+
+    st.markdown(f"### {len(df_exploration)} review(s) found")
+    st.markdown("---")
 
     for _, row in df_exploration.head(30).iterrows():
         st.markdown(f"**{row['name']}** ({'Local Guide' if row['isLocalGuide'] else 'Visitor'})")
-        st.markdown(f"🕒 {row['publishAt']}")
+        st.markdown(f"⭐ {row['note_estimee']} | 🕒 {row['publishAt']}")
         st.markdown(f"💬 {row['text']}")
         st.markdown("---")
