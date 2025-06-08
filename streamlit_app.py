@@ -441,20 +441,21 @@ with tabs[3]:
     )
     st.plotly_chart(fig_bar, use_container_width=True)
 
+
 with tabs[4]:
     st.header("📝 Explore Reviews")
 
-    # Choix de la langue
+    # Filtre par langue
     langue_sel = st.selectbox(
         "Filter by Language",
         options=["All"] + sorted(df['originalLanguage'].dropna().unique().tolist())
     )
 
-    # Recherche par mot-clé
-    mot_cle = st.text_input("Search for a word in comments (case-insensitive)")
-
-    # Curseur pour filtrer par longueur
+    # Filtre par longueur minimale
     min_mots = st.slider("Minimum Review Length (in words)", min_value=0, max_value=500, value=20)
+
+    # Champ de recherche placé juste en dessous du slider
+    mot_cle = st.text_input("Search for a word in the comment (case-insensitive)")
 
     # Application des filtres
     df_exploration = df_filtered.copy()
