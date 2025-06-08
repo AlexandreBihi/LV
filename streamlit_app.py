@@ -445,19 +445,24 @@ with tabs[3]:
 with tabs[4]:
     st.header("📝 Explore Reviews")
 
-    # Filtre par langue
-    langue_sel = st.selectbox(
-        "Filter by Language",
-        options=["All"] + sorted(df['originalLanguage'].dropna().unique().tolist())
+    # Filtres de langue dans les colonnes
+    col1, col2 = st.columns(2)
+    with col1:
+        langue_sel = st.selectbox(
+            "Filter by Language",
+            options=["All"] + sorted(df['originalLanguage'].dropna().unique().tolist())
+        )
+    with col2:
+        min_mots = st.slider("Minimum Review Length (in words)", min_value=0, max_value=500, value=20)
+
+    # Input de recherche — en dehors des colonnes pour être sûr qu’il s’affiche
+    mot_cle = st.text_input(
+        "Search for a word in comments (case-insensitive)", 
+        value="", 
+        key="mot_cle_explore"
     )
 
-    # Filtre par longueur minimale
-    min_mots = st.slider("Minimum Review Length (in words)", min_value=0, max_value=500, value=20)
-
-    # Champ de recherche placé juste en dessous du slider
-    mot_cle = st.text_input("Search for a word in the comment (case-insensitive)")
-
-    # Application des filtres
+    # Filtrage
     df_exploration = df_filtered.copy()
 
     if langue_sel != "All":
@@ -466,29 +471,14 @@ with tabs[4]:
     df_exploration = df_exploration[df_exploration['nb_mots'] >= min_mots]
 
     if mot_cle:
-        df_exploration = df_exploration[
-            df_exploration['text'].str.contains(mot_cle, case=False, na=False)
-        ]
-        st.markdown(f"🔍 **Filtered on keyword:** _{mot_cle}_")
+        df_exploration = df_exploration[df_exploration['text'].str.contains(mot_cle, case=False, na=False)]
 
     st.markdown(f"### {len(df_exploration)} review(s) found")
     st.markdown("---")
 
-    if df_exploration.empty:
-        st.warning("No reviews match your filters.")
-        st.stop()
-
     for _, row in df_exploration.head(30).iterrows():
         st.markdown(f"**{row['name']}** ({'Local Guide' if row['isLocalGuide'] else 'Visitor'})")
         st.markdown(f"⭐ {row['note_estimee']} | 🕒 {row['publishAt']}")
-
-        texte_commentaire = row['text']
-        if mot_cle:
-            texte_commentaire = re.sub(
-                f"({re.escape(mot_cle)})",
-                r"**\1**",
-                texte_commentaire,
-                flags=re.IGNORECASE
-            )
-        st.markdown(f"💬 {texte_commentaire}", unsafe_allow_html=True)
+        st.markdown(f"💬 {row['text']}")
         st.markdown("---")
+
