@@ -317,13 +317,18 @@ with tabs[2]:
     st.markdown("---")
     st.markdown("### ☁️ WordCloud by Review Tone")
 
+    mots_exclus = {"none", "louis", "vuitton"}
+
     text_pos = ' '.join(
         word for line in df_filtered[df_filtered['stars'] >= 4]['cleaned_words_all'].dropna()
-        for word in line.split() if len(word) > 3
+        for word in line.split()
+        if len(word) > 3 and word.lower() not in mots_exclus
     )
+
     text_neg = ' '.join(
         word for line in df_filtered[df_filtered['stars'] < 4]['cleaned_words_all'].dropna()
-        for word in line.split() if len(word) > 3
+        for word in line.split()
+        if len(word) > 3 and word.lower() not in mots_exclus
     )
 
     col1, col2 = st.columns(2)
@@ -343,7 +348,7 @@ with tabs[2]:
         ax.imshow(wc_neg, interpolation='bilinear')
         ax.axis("off")
         st.pyplot(fig)
-
+        
 with tabs[3]:
     st.header("🌍 Languages & Profiles")
 
