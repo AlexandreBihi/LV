@@ -333,7 +333,8 @@ with tabs[2]:
         x="note_estimee",
         y="Longueur Moyenne",
         text="Longueur Moyenne",
-        title="Average Review Length by Estimated Rating"
+        title="Average Review Length by Estimated Rating",
+        color='statut_commentaire'
     )
     fig_mots_moyens.update_traces(texttemplate='%{text:.1f}', textposition='outside')
     fig_mots_moyens.update_layout(
