@@ -192,9 +192,9 @@ with tabs[0]:
         for _, row in etablissements.iterrows():
             popup_html = f"""
             <b>{row['title']}</b><br>
-            ⭐ Note moyenne : {row['note_moyenne']:.1f}<br>
-            📝 Nombre d'avis : {row['nb_avis']}<br>
-            🔗 <a href="{row['url']}" target="_blank">Voir sur Google Maps</a>
+            ⭐ Average rating : {row['note_moyenne']:.1f}<br>
+            📝 Number of reviews : {row['nb_avis']}<br>
+            🔗 <a href="{row['url']}" target="_blank">See on Google Maps</a>
             """
             folium.CircleMarker(
                 location=[row['location/lat'], row['location/lng']],
